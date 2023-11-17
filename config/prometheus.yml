@@ -1,0 +1,22 @@
+#    В глобальной секции определены следующие параметры:
+#      - scrape_interval: интервал сканирования, по умолчанию равен 5 секундам.
+#      - external_labels: метки, которые будут присоединены к временным рядам или
+#  предупреждениям при взаимодействии с внешними системами.
+global:
+  scrape_interval:     5s
+  external_labels:
+    monitor: 'codelab-monitor'
+
+#В секции scrape_configs определена конфигурация сканирования:
+#  - job_name: название задания, в данном случае 'web_vc_rest'.
+#  - scrape_interval: интервал сканирования для данного задания, равный 5 секундам.
+#  - metrics_path: путь к метрикам, в данном случае '/actuator/prometheus'.
+#  - static_configs: статическая конфигурация, определяющая цели для сканирования.
+#  В данном случае указана одна цель - 'host.docker.internal:8080'.
+scrape_configs:
+  - job_name: 'prometheus'
+    scrape_interval: 5s
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8080']
+

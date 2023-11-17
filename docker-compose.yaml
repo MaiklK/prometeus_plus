@@ -1,0 +1,47 @@
+#  Версия Docker Compose
+version:  '4.23'
+services:
+#  Сервис "prometheus" использует образ "prom/prometheus" и будет доступен по порту 9095
+#  на хостовой машине. Конфигурационный файл "prometheus.yml" будет монтироваться из
+#  локальной директории "./config/prometheus.yml" в контейнер.
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus_prometheus
+    ports:
+      - "9095:9090"
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+
+#    - Сервис "grafana" использует образ "grafana/grafana" и будет доступен по порту 3005
+#  на хостовой машине. Установлены переменные среды для настройки учетных данных администратора.
+  grafana:
+    image: grafana/grafana
+    container_name: prometheus_grafana
+    ports:
+      - "3005:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+#  Сервис "postgres" использует образ "postgres" и будет доступен по порту 5435 на хостовой машине.
+#  Установлены переменные среды для настройки базы данных Postgres.
+  postgres:
+    image: postgres
+    container_name: prometheus_postgres_db
+    restart: unless-stopped
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_DB: messages
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      PGDATA: /var/lib/postgresql/data
+
+# Наше приложение и его настройки
+  prometheus_plus_grafana:
+    image: prometheus_plus:latest
+    ports:
+      - "8085:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/messages
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
