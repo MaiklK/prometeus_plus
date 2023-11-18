@@ -19,9 +19,9 @@ services:
     container_name: prometheus_grafana
     ports:
       - "3005:3000"
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+#    environment:
+#      - GF_SECURITY_ADMIN_USER=admin
+#      - GF_SECURITY_ADMIN_PASSWORD=admin
 #  Сервис "postgres" использует образ "postgres" и будет доступен по порту 5435 на хостовой машине.
 #  Установлены переменные среды для настройки базы данных Postgres.
   postgres:
@@ -37,7 +37,7 @@ services:
       PGDATA: /var/lib/postgresql/data
 
 # Наше приложение и его настройки
-  prometheus_plus_grafana:
+  my_application:
     image: prometheus_plus:latest
     ports:
       - "8085:8080"
